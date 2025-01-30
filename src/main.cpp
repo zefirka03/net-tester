@@ -14,8 +14,8 @@
 
 using namespace boost;
 
-#define ITERATIONS 10000
-constexpr size_t DATA_SIZE = 1024;
+#define ITERATIONS 1000
+constexpr size_t DATA_SIZE = 1024 << 5;
 
 int main(int argc, char* argv[]){
     Config cfg = {
@@ -41,14 +41,14 @@ int main(int argc, char* argv[]){
             BenchmarkData acc_bench = {};
             std::ofstream bench_file;
             bench_file.open("bench_" + std::to_string(packetSize) + ".csv");
-            bench_file << "packet size" << ',' << "latency" << ',' << "bandwidth" << '\n';
+            bench_file << "iteration" << ',' << "latency" << ',' << "bandwidth" << '\n';
 
             for (uint64_t i = 0; i < ITERATIONS; i += 1) {
                 auto bm = client.bench(DATA_SIZE, packetSize);
                 acc_bench.latency += bm.latency;
                 acc_bench.bandwidth += bm.bandwidth;
 
-                bench_file << (1 << i) << ',' << bm.latency << ',' << bm.bandwidth << '\n';
+                bench_file << i << ',' << bm.latency << ',' << bm.bandwidth << '\n';
             }
             bench_file.close();
 
